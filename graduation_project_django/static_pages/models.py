@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# this is the skills model
 class skills(models.Model):
     skill_name = models.CharField(max_length=100)
     skill_description = models.DateField()
@@ -34,6 +35,7 @@ class students(models.Model):
     password1 = models.CharField(max_length=30, blank=True)
     password2 = models.CharField(max_length=30, blank=True)
 
+    #relationships
     student_intrest = models.ForeignKey(intrests, on_delete=models.SET_NULL, null = True)
     student_skill = models.ManyToManyField(skills)
 
