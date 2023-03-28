@@ -199,7 +199,7 @@ var dtShare = {"shareButtonText":{"facebook":"Share on Facebook","twitter":"Twee
 
 <script type='text/javascript' src="{% static 'themes/dt-the7/js/above-the-fold.min59db.js'  %}"id='dt-above-fold-js'></script>
 <script type='text/javascript' src="{% static 'plugins/ultimate-member/assets/js/um-gdpr.min21bb.js'  %}" id='um-gdpr-js'></script>
-<link rel="https://api.w.org/" href="wp-json/index.html" /><link rel="alternate" type="application/json" href="wp-json/wp/v2/pages/8040.json" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="xmlrpc0db0.php?rsd" />
+<link rel="https://api.w.org/" href="{% url 'home'%}" /><link rel="alternate" type="application/json" href="wp-json/wp/v2/pages/8040.json" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="xmlrpc0db0.php?rsd" />
 <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="wlwmanifest.xml" />
 <meta name="generator" content="WordPress 6.1.1" />
 <link rel="canonical" href="{% url 'home'%}" />
@@ -328,13 +328,33 @@ div.uimob340 .um-field-half {
 			<div class="elementor-widget-wrap elementor-element-populated">
 								<div class="elementor-element elementor-element-d8e0e62 elementor-widget__width-auto stax-condition-yes stax-user_role_enabled-yes elementor-widget elementor-widget-the7_button_widget" data-id="d8e0e62" data-element_type="widget" data-widget_type="the7_button_widget.default">
 				<div class="elementor-widget-container">
-			<div class="elementor-button-wrapper"><a href="login/index.html" class="box-button elementor-button elementor-size-sm">LOGIN</a></div>		</div>
-				</div>
-				<div class="elementor-element elementor-element-68497b6 elementor-widget__width-auto stax-condition-yes stax-user_role_enabled-yes elementor-widget elementor-widget-the7_button_widget" data-id="68497b6" data-element_type="widget" data-widget_type="the7_button_widget.default">
-				<div class="elementor-widget-container">
-			<div class="elementor-button-wrapper"><a href="register/index.html" class="box-button elementor-button elementor-size-sm">REGISTER</a></div>		</div>
-				</div>
-					</div>
+
+        {% if user.is_authenticated %}
+      
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+      </li>
+
+      {% else %}
+
+      <div class="elementor-button-wrapper">
+        <a href="{%url 'login'%}" class="box-button elementor-button elementor-size-sm">LOGIN</a>
+    </div>		
+    </div>
+        </div>
+        <div class="elementor-element elementor-element-68497b6 elementor-widget__width-auto stax-condition-yes stax-user_role_enabled-yes elementor-widget elementor-widget-the7_button_widget" data-id="68497b6" data-element_type="widget" data-widget_type="the7_button_widget.default">
+        <div class="elementor-widget-container">
+    <div class="elementor-button-wrapper">
+        <a href="{%url 'register'%}"  class="box-button elementor-button elementor-size-sm">REGISTER</a>
+    </div>		</div>
+        </div>
+            </div>
+
+      {% endif %}
+			
 		</div>
 				<div class="elementor-column elementor-col-25 elementor-top-column elementor-element elementor-element-834c10a elementor-hidden-mobile elementor-hidden-tablet" data-id="834c10a" data-element_type="column">
 			<div class="elementor-widget-wrap elementor-element-populated">

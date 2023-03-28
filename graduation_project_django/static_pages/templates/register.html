@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}  
+{% load static %}
+
+
+{% block content %}
+<div id="main" class="sidebar-none sidebar-divider-off">
+
+	
+	<div class="main-gradient"></div>
+	<div class="wf-wrap">
+	<div class="wf-container-main">
+
+	
+
+
+	<div id="content" class="content" role="main">
+
+				<div data-elementor-type="single-page" data-elementor-id="5343" class="elementor elementor-5343 elementor-location-single post-16923 page type-page status-publish hentry description-off">
+								<section class="elementor-section elementor-top-section elementor-element elementor-element-c72efdf elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-id="c72efdf" data-element_type="section">
+							<div class="elementor-background-overlay"></div>
+							<div class="elementor-container elementor-column-gap-wider">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-0f28974" data-id="0f28974" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-0c00098 elementor-widget elementor-widget-theme-post-title elementor-page-title elementor-widget-heading" data-id="0c00098" data-element_type="widget" data-widget_type="theme-post-title.default">
+				<div class="elementor-widget-container">
+			<h2 class="elementor-heading-title elementor-size-default">Register</h2>		</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+				<section class="elementor-section elementor-top-section elementor-element elementor-element-0e8cfe9 elementor-section-full_width elementor-section-height-default elementor-section-height-default" data-id="0e8cfe9" data-element_type="section">
+							<div class="elementor-background-overlay"></div>
+							<div class="elementor-container elementor-column-gap-no">
+					<div class="elementor-column elementor-col-100 elementor-top-column elementor-element elementor-element-f597e47" data-id="f597e47" data-element_type="column">
+			<div class="elementor-widget-wrap elementor-element-populated">
+								<div class="elementor-element elementor-element-6c5b303 elementor-widget elementor-widget-theme-post-content" data-id="6c5b303" data-element_type="widget" data-widget_type="theme-post-content.default">
+				<div class="elementor-widget-container">
+			
+<div class="um um-register um-16917">
+
+	<div class="um-form" data-mode="register">
+
+		<form method="post" action="#">
+			{% csrf_token %}
+
+			{% if register_form.errors %}
+				<p class="error">Please correct the error below.</p>
+			{% endif %}
+			{{ register_form|crispy }}   
+			
+			<button class="btn btn-primary" type="submit">Register</button>
+			
+		</form>
+		<p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
+
+	</div>
+
+</div><style type="text/css">
+.um-16917.um {
+	max-width: 1200px;
+}</style>
+
+		</div>
+				</div>
+					</div>
+		</div>
+							</div>
+		</section>
+						</div>
+		
+	</div><!-- #content -->
+
+	
+
+
+			</div><!-- .wf-container -->
+		</div><!-- .wf-wrap -->
+
+	
+	</div><!-- #main -->
+
+	
+{% endblock %}
