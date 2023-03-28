@@ -31,6 +31,8 @@ class students(models.Model):
     student_college = models.CharField(max_length=30, blank=True)
     student_image = models.ImageField(upload_to='images/', blank=True)
     birth_date = models.DateField(null=True, blank=True)
+    password1 = models.CharField(max_length=30, blank=True)
+    password2 = models.CharField(max_length=30, blank=True)
 
     student_intrest = models.ForeignKey(intrests, on_delete=models.SET_NULL, null = True)
     student_skill = models.ManyToManyField(skills)
