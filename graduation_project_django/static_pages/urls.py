@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home ,about, blog, contact, faqs, jobs, login_request, register_request,logout_request,profile,profile1
+from .views import home ,about, blog, contact, faqs, jobs, login_request, register_request,logout_request,profile,register
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -11,10 +11,10 @@ urlpatterns = [
     path('faqs', faqs, name='faqs'),
     path('jobs', jobs, name='jobs'),
     path('login', login_request, name='login'),
-    path('register', register_request, name='register'),
+    path('register', register, name='register'),
     path("logout", logout_request, name= "logout"),
     path("profile", profile, name= "profile"),
-    path("profile1", profile1, name= "profile1"),
+
 ]
 
 # Only add this when we are in debug mode.

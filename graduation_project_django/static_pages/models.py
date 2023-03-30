@@ -27,9 +27,8 @@ class intrests(models.Model):
         return self.intrest_name
 
 class students(models.Model):
-    student_name = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     studnet_location = models.CharField(max_length=30, blank=True)
-    student_email = models.EmailField(max_length=500, blank=True)
     student_college = models.CharField(max_length=30, blank=True)
     student_image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     birth_date = models.DateField(null=True, blank=True)
@@ -40,10 +39,10 @@ class students(models.Model):
     student_skill = models.ManyToManyField(skills)
 
     def __str__(self):
-        return self.student_name.username
+        return self.user.username
     
-    def save(self):
-        super().save()
+    def save(self, *args, **kwargs):
+        super(students, self).save(*args, **kwargs)
 
         img = Image.open(self.student_image.path) # Open image
 

@@ -13,12 +13,25 @@ def register_request(request):
 		form = NewUserForm(request.POST)
 		if form.is_valid():
 			user = form.save()
+            
 			login(request, user)
 			messages.success(request, "Registration successful." )
 			return redirect("/")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
 	return render (request=request, template_name="register.html", context={"register_form":form})
+
+def register(request):
+    if request.method == 'POST':
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Your account has been created! You are now able to log in')
+            return redirect('login')
+    else:
+        form = NewUserForm()
+    return render(request, 'register.html', {'register_form': form})
 
 def login_request(request):
 	if request.method == "POST":
