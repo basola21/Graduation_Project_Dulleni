@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect
-from .forms import NewUserForm
+from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import login, authenticate , logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
 
+from django.contrib.auth.decorators import login_required
 
 # there is a better way of doing this using class based views 
 # which is more efficient and easier to read but we will stick with this for now 
@@ -62,4 +63,30 @@ def faqs(request):
 def jobs(request):
     return render(request , "jobs.html")
 
+def profile1(request):
+    return render(request , "profile1.html")
 
+# Update it here
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.students)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated!')
+            return redirect('profile') # Redirect back to profile page
+
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.students)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+
+    return render(request, 'profile.html', context)

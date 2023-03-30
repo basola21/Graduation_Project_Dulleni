@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from PIL import Image
 
 # this is the skills model
 class skills(models.Model):
     skill_name = models.CharField(max_length=100)
-    skill_description = models.DateField()
+    skill_description = models.TextField()
 
     def __str__(self):
         return self.skill_name
@@ -30,17 +31,27 @@ class students(models.Model):
     studnet_location = models.CharField(max_length=30, blank=True)
     student_email = models.EmailField(max_length=500, blank=True)
     student_college = models.CharField(max_length=30, blank=True)
-    student_image = models.ImageField(upload_to='images/', blank=True)
+    student_image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     birth_date = models.DateField(null=True, blank=True)
-    password1 = models.CharField(max_length=30, blank=True)
-    password2 = models.CharField(max_length=30, blank=True)
+
 
     #relationships
     student_intrest = models.ForeignKey(intrests, on_delete=models.SET_NULL, null = True)
     student_skill = models.ManyToManyField(skills)
 
     def __str__(self):
-        return self.student_name
+        return self.student_name.username
+    
+    def save(self):
+        super().save()
+
+        img = Image.open(self.student_image.path) # Open image
+
+        # resize image
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size) # Resize image
+            img.save(self.student_image.path) # Save it again and override the larger image
 
 
 class occupations(models.Model):
