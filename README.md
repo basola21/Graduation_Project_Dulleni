@@ -28,7 +28,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo">
   </a>
 
   <h3 align="center">Dulleni Graduation Project</h3>
@@ -36,10 +36,10 @@
   <p align="center">
     A way for students to find their career path
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href=""><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://dulleni.clients.scitecs.com/">View Demo</a>
  
   </p>
 </div>
@@ -58,15 +58,9 @@
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -110,7 +104,7 @@ to run this project on your local environment please follow the next steps
 ### Prerequisites, Installation & running locally
 
 start by cloning this repository by running 
-* installing the python packages
+* cloning the repository
   ```git
   git clone https://github.com/basola21/Graduation_Project_Dulleni.git
   ```
