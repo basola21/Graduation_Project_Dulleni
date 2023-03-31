@@ -224,7 +224,9 @@ var dtShare = {"shareButtonText":{"facebook":"Share on Facebook","twitter":"Twee
 <meta property="og:url" content="https://dulleni.clients.scitecs.com/" />
 <meta property="og:type" content="website" />
 <meta name="generator" content="Elementor 3.11.5; features: e_dom_optimization, e_optimized_assets_loading, a11y_improvements; settings: css_print_method-external, google_font-enabled, font_display-auto">
-<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style><script type="text/javascript" id="the7-loader-script">
+<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+<!--
+<script type="text/javascript" id="the7-loader-script">
 document.addEventListener("DOMContentLoaded", function(event) {
 	var load = document.getElementById("load");
 	if(!load.classList.contains('loader-removed')){
@@ -234,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 });
 
-</script>
+</script> -->
 		<link rel="icon" href="{% static 'uploads/dulleni-favicon.png' %}"   sizes="32x32" />
 <link rel="icon" href= "{% static 'uploads/dulleni-favicon.png' %}"  sizes="192x192" />
 <link rel="apple-touch-icon" href="{% static 'uploads/dulleni-favicon.png' %}"  />
@@ -353,17 +355,31 @@ div.uimob340 .um-field-half {
 
         {% if user.is_authenticated %}
 
-        <div class="nav-item">
-            <a class="box-button elementor-button elementor-size-sm"href="{% url 'profile'%}">Welcome, {{user.username}}</a>
-          </div>
+        <div class="container">
+            <div class="row">
+                
+            <div class="col-md-auto">
+                <a href="{% url 'profile' %}"><img
+                    class="rounded-circle account-img"
+                    src="{{ user.students.student_image.url }}"
+                    height="40px" width="40px"/></a>
+                    
+                
+            </div>
+            <div class="column">
+                <div class="nav-item">
+                    <a class="box-button elementor-button elementor-size-sm"href="{% url 'profile'%}">Welcome, {{user.username}}</a>
+                </div>
 
-        <div class="nav-item">
-            <a class="nav-item" href="/logout">Logout</a>
+                <div class="nav-item">
+                    <a class="nav-item" href="/logout">Logout</a>
+                </div>
+            </div>
         </div>
-      
+        </div>
 
       {% else %}
-
+       
       <div class="elementor-button-wrapper">
         <a href="{%url 'login'%}" class="box-button elementor-button elementor-size-sm">LOGIN</a>
     </div>		

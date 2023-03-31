@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 
+
 # this is the skills model
 class skills(models.Model):
     skill_name = models.CharField(max_length=100)
@@ -50,6 +51,7 @@ class students(models.Model):
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
             img.thumbnail(output_size) # Resize image
+            #img = img.resize((300, 300))
             img.save(self.student_image.path) # Save it again and override the larger image
 
 
