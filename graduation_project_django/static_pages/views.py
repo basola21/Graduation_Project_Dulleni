@@ -1,10 +1,12 @@
 from django.shortcuts import render,redirect
-from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm
+from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm ,IntrestTestForm
+from .models import question
 from django.contrib.auth import login, authenticate , logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
-
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+
 
 # there is a better way of doing this using class based views 
 # which is more efficient and easier to read but we will stick with this for now 
@@ -26,8 +28,7 @@ def register(request):
         form = NewUserForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Your account has been created! You are now able to log in')
+            messages.success(request, 'Your account has been created! You are now able to log in')
             return redirect('login')
     else:
         form = NewUserForm()
@@ -90,7 +91,7 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, f'Your account has been updated!')
+            messages.success(request, 'Your account has been updated!')
             return redirect('profile') # Redirect back to profile page
 
     else:
@@ -103,3 +104,20 @@ def profile(request):
     }
 
     return render(request, 'profile.html', context)
+
+# Intrest test section
+
+@login_required
+def intrest_test(request , page = 1):
+    form = IntrestTestForm(instance=request.user)
+
+    questions = Paginator(question.objects.all(),1)
+    page_num = request.GET.get('page', page)
+    question_page = questions.get_page(page_num)
+
+    context ={
+    'question' : question_page, 
+    'form' : form
+    }
+
+    return render(request,"intrest_test.html",context)

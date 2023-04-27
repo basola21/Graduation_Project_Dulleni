@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import students
+from .models import students , intrestTest
 
 
 class NewUserForm(UserCreationForm):
@@ -23,4 +23,9 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = students
-        fields = ['student_image', 'student_college', 'studnet_location', 'birth_date', 'student_intrest', 'student_skill']
+        fields = ['student_image', 'student_college', 'studnet_location', 'birth_date', 'student_skill']
+
+class IntrestTestForm(forms.ModelForm):
+    class Meta:
+        model = intrestTest
+        fields = ['answer']

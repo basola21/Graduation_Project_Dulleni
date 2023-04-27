@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+{% load crispy_forms_tags %}
+
+
+<div id='main' class="content-section">
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <!-- FORM HERE -->
+                {% for question_ in question %}
+                <h2>{{ question_ }}</h2>
+                {% endfor %}
+                <form method="POST">
+                    {% csrf_token %} {{ form|crispy }}
+                   
+                {% if question.has_previous %}
+                <a href="{% url 'intrest_test' question.previous_page_number %}">
+                    Previous Question
+                </a>
+                {% endif%}
+                {% if question.has_next %}
+                <a href="{% url 'intrest_test' question.next_page_number %}">
+                    Next Question
+                </a>
+                {% endif%}
+
+                                
+
+                </form>
+            </div>
+    </main>
+</div>
+{% endblock content%}

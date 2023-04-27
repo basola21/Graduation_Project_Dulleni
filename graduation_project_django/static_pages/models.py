@@ -51,7 +51,6 @@ class students(models.Model):
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
             img.thumbnail(output_size) # Resize image
-            #img = img.resize((300, 300))
             img.save(self.student_image.path) # Save it again and override the larger image
 
 
@@ -64,3 +63,33 @@ class occupations(models.Model):
 
     def __str__(self):
         return self.occupation_name
+    
+
+class question(models.Model):
+    question = models.TextField(max_length=200,blank=True)
+
+    def __str__(self):
+        return self.question
+    
+class intrestTest(models.Model):
+    answer_choices = [
+        (0, 'Strongly Dislike'),
+        (1, 'Dislike'),
+        (2, 'Unsure'),
+        (3, 'Like'),
+        (4, 'Strongly Like'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    question = models.ManyToManyField(question, blank=True)
+    answer = models.CharField(max_length=20, choices=answer_choices, )
+
+
+
+    #remove this later
+    strongly_dislike = models.BooleanField(blank=True)
+    dislike = models.BooleanField(blank=True)
+    unsure = models.BooleanField(blank=True)
+    like = models.BooleanField(blank=True)
+    strongly_like = models.BooleanField(blank=True)
+    
