@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import students , intrestTest
+from .models import students , Answer
 
 
 class NewUserForm(UserCreationForm):
@@ -25,7 +25,20 @@ class ProfileUpdateForm(forms.ModelForm):
         model = students
         fields = ['student_image', 'student_college', 'studnet_location', 'birth_date', 'student_skill']
 
-class IntrestTestForm(forms.ModelForm):
+class AnswersForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.question = kwargs.pop('question', None)
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
     class Meta:
-        model = intrestTest
+        model = Answer
         fields = ['answer']
+
+    def save(self, commit=True):
+        answer = super().save(commit=False)
+        answer.user = self.user
+        answer.question = self.question
+        if commit:
+            answer.save()
+        return answer

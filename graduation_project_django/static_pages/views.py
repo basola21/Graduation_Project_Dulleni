@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
-from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm ,IntrestTestForm
-from .models import question
+from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm ,AnswersForm
+from .models import Question
 from django.contrib.auth import login, authenticate , logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
@@ -108,16 +108,30 @@ def profile(request):
 # Intrest test section
 
 @login_required
-def intrest_test(request , page = 1):
-    form = IntrestTestForm(instance=request.user)
+def intrest_test(request, page = 1):
+    questions = Question.objects.all()
+    paginator = Paginator(questions, 1)
+    try:
+        question = paginator.page(page)
+    except EmptyPage:
+        return redirect('intrest_test', page=paginator.num_pages)
+    print(f"Current page: {question.number}")
 
-    questions = Paginator(question.objects.all(),1)
-    page_num = request.GET.get('page', page)
-    question_page = questions.get_page(page_num)
 
-    context ={
-    'question' : question_page, 
-    'form' : form
-    }
+    if request.method == 'POST':
+        form = AnswersForm(request.POST)
+        if form.is_valid():
+            form.save()
+            if question.has_next():
+                next_page = question.next_page_number()
+                print(f"Next page: {next_page}")
+                return redirect('intrest_test', page=next_page)
+            else:
+                return redirect('result')
+    else:
+        form = AnswersForm()
+    print(f"Page: {page}")
+    return render(request, 'intrest_test.html', {'form': form, 'question': question, 'page': page})
 
-    return render(request,"intrest_test.html",context)
+def result(request):
+    return render(request, 'result.html')

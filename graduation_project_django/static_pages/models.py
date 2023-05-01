@@ -65,13 +65,13 @@ class occupations(models.Model):
         return self.occupation_name
     
 
-class question(models.Model):
+class Question(models.Model):
     question = models.TextField(max_length=200,blank=True)
 
     def __str__(self):
         return self.question
     
-class intrestTest(models.Model):
+class Answer(models.Model):
     answer_choices = [
         (0, 'Strongly Dislike'),
         (1, 'Dislike'),
@@ -81,15 +81,9 @@ class intrestTest(models.Model):
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    question = models.ManyToManyField(question, blank=True)
+    question = models.ManyToManyField(Question, blank=True)
     answer = models.CharField(max_length=20, choices=answer_choices, )
 
 
 
-    #remove this later
-    strongly_dislike = models.BooleanField(blank=True)
-    dislike = models.BooleanField(blank=True)
-    unsure = models.BooleanField(blank=True)
-    like = models.BooleanField(blank=True)
-    strongly_like = models.BooleanField(blank=True)
     

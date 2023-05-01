@@ -14,7 +14,6 @@ urlpatterns = [
     path('register', register, name='register'),
     path("logout", logout_request, name= "logout"),
     path("profile", profile, name= "profile"),
-    path("intrest-test",intrest_test, name = "intrest_test"),
     path("intrest-test/<int:page>",intrest_test, name = "intrest_test"),
     
 ]
