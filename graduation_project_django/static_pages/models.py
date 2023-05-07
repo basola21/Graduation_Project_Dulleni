@@ -36,8 +36,12 @@ class students(models.Model):
 
 
     #relationships
-    student_intrest = models.ForeignKey(intrests, on_delete=models.SET_NULL, null = True)
+    student_intrest = models.CharField(max_length=50, blank=True)
+
     student_skill = models.ManyToManyField(skills)
+
+    #student answers
+    student_answer = models.ManyToManyField('Question',through='Answer')
 
     def __str__(self):
         return self.user.username
@@ -67,6 +71,8 @@ class occupations(models.Model):
 
 class Question(models.Model):
     question = models.TextField(max_length=200,blank=True)
+    questionType = models.CharField(max_length=50,blank=True)
+    answered_by = models.ManyToManyField('students', through='Answer')
 
     def __str__(self):
         return self.question
@@ -80,9 +86,9 @@ class Answer(models.Model):
         (4, 'Strongly Like'),
     ]
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    question = models.ManyToManyField(Question, blank=True)
-    answer = models.CharField(max_length=20, choices=answer_choices, )
+    user = models.ForeignKey(students, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer = models.IntegerField(choices=answer_choices )
 
 
 

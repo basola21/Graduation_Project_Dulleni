@@ -26,19 +26,6 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['student_image', 'student_college', 'studnet_location', 'birth_date', 'student_skill']
 
 class AnswersForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.question = kwargs.pop('question', None)
-        self.user = kwargs.pop('user', None)
-        super().__init__(*args, **kwargs)
-
     class Meta:
         model = Answer
         fields = ['answer']
-
-    def save(self, commit=True):
-        answer = super().save(commit=False)
-        answer.user = self.user
-        answer.question = self.question
-        if commit:
-            answer.save()
-        return answer

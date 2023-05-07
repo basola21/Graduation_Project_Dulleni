@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm ,AnswersForm
-from .models import Question
+from .models import Question, Answer
 from django.contrib.auth import login, authenticate , logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
@@ -110,28 +110,89 @@ def profile(request):
 @login_required
 def intrest_test(request, page = 1):
     questions = Question.objects.all()
-    paginator = Paginator(questions, 1)
-    try:
-        question = paginator.page(page)
-    except EmptyPage:
-        return redirect('intrest_test', page=paginator.num_pages)
-    print(f"Current page: {question.number}")
+    form = AnswersForm()
 
+
+    paginator = Paginator(questions, 1)
+    page = paginator.get_page(page)
+
+    question = Question.objects.get(pk=page.object_list[0].id)
+
+    context = {'question':question.question,'form':form}
 
     if request.method == 'POST':
         form = AnswersForm(request.POST)
         if form.is_valid():
-            form.save()
-            if question.has_next():
-                next_page = question.next_page_number()
-                print(f"Next page: {next_page}")
+
+            # Get the current user
+            user = request.user
+            student = user.students
+
+            # Get the Question object corresponding to the selected question ID
+            question = Question.objects.get(pk=page.object_list[0].id)
+
+            try:
+                answer = Answer.objects.get(user=student, question=question)
+                # Update the existing answer
+                answer.answer = form.cleaned_data['answer']
+                answer.save()
+                messages.success(request, 'Your answer has been updated!')
+                
+            except Answer.DoesNotExist:
+                # Create a new answer instance for this user and question
+                answer = form.save(commit=False)
+                answer.user = student
+                answer.question = question
+                answer.save()
+                messages.success(request, 'Your answer has been saved!')
+            
+            if page.has_next():
+                next_page = str(page.next_page_number())
                 return redirect('intrest_test', page=next_page)
             else:
                 return redirect('result')
+        else:
+            messages.error(request, 'Please select an answer for all questions')
     else:
-        form = AnswersForm()
-    print(f"Page: {page}")
-    return render(request, 'intrest_test.html', {'form': form, 'question': question, 'page': page})
+        # return a response when request is not a POST request
+        return render(request, 'intrest_test.html', context)
+    
+    return render(request, 'intrest_test.html', context)
 
+@login_required
 def result(request):
-    return render(request, 'result.html')
+
+    interest_types = ["realistic", "investigative", "artistic", "social", "enterprising", "conventional"]
+    scoredict = {}
+
+    # Retrieve user's answers from Answers table
+    user_id = request.user.id
+    user_answers = Answer.objects.filter(user=user_id)
+
+    # Calculate scores for each interest type
+    for interest_type in interest_types:
+        questions = Question.objects.filter(questionType=interest_type)
+        if not questions:
+            print(f"No questions found for interest type: {interest_type}")
+            continue
+
+        score = 0
+        for question in questions:
+            answer = user_answers.filter(question=question).first()
+            if not answer:
+                print(f"No answer found for question: {question.question}")
+                continue
+
+            score += answer.answer
+
+        scoredict[interest_type] = score
+
+    # Determine interest type with highest score
+    max_score = max(scoredict.values())
+    interest_type = [key for key, value in scoredict.items() if value == max_score][0]
+
+    student = request.user.students
+    student.student_intrest = interest_type
+    student.save()
+
+    return render(request, 'result.html', {'interest_type': interest_type})

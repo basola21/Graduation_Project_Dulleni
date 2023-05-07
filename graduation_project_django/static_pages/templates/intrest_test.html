@@ -1,48 +1,28 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 {% load crispy_forms_tags %}
-
 
 <div id='main' class="content-section">
     <main role="main" class="container">
         <div class="row">
-            <div class="col-md-8">
-                <!-- FORM HERE -->
-                {% if not form.is_bound %}
-                <!-- Display the first question and Next button -->
-                <h2>{{ question.0 }}</h2>
-                <form method="POST">
-                    {% csrf_token %} {{ form|crispy }}
-                    <button type="submit">Next</button>
-                </form>
-                {% else %}
-                {% if not form.errors %}
-                {% if question.has_next %}
-                <!-- Display the next question and Next button -->
-                <h2>{{ question.next }}</h2>
-                <form method="POST">
-                    {% csrf_token %} {{ form|crispy }}
-                    <button type="submit">Next</button>
-                </form>
-                {% else %}
-                <!-- Display the last question and Submit button -->
-                <h2>{{ question.current }}</h2>
-                <form method="POST">
-                    {% csrf_token %} {{ form|crispy }}
-                    <button type="submit">Submit</button>
-                </form>
-                {% endif %}
-                {% endif %}
-                {% if form.errors %}
-                <!-- Display the current question with error messages and Next button -->
-                <h2>{{ question.current }}</h2>
-                <form method="POST">
-                    {% csrf_token %} {{ form|crispy }}
-                    <button type="submit">Next</button>
-                </form>
-                {% endif %}
-                {% endif %}
+            <div class="col-md-8 mx-auto my-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post">
+                            <h3>Interest Test</h3>
+                            <h5 class="mb-4" style="font-weight:bold; font-size:1.5rem; text-align:center">{{question}}</h5>
 
+                            {% csrf_token %}
+                            {{ form|crispy }}
+
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
+                    </div>
+                </div>
             </div>
+        </div>
     </main>
 </div>
+
 {% endblock content%}

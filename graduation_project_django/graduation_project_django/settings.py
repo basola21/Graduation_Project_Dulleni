@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'static_pages',
     'crispy_forms',
     "crispy_bootstrap5",
+    'django_extensions',
 ]
 
 #template pack for the forms

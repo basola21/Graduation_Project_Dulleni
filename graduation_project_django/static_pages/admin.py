@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import skills, courses, intrests, students, occupations,intrestTest,Question
+from .models import skills, courses, intrests, students, occupations,Answer,Question
 
 # Register your models here.
 admin.site.register(skills)
@@ -7,7 +7,7 @@ admin.site.register(courses)
 admin.site.register(intrests)
 admin.site.register(students)
 admin.site.register(occupations)
-admin.site.register(intrestTest)
+admin.site.register(Answer)
 admin.site.register(Question)
 
 admin.site.site_header = "Graduation Project Admin"
