@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+<div id="main" class="content-section">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h1 class="display-3 text-center mb-5">Interest Test Results</h1>
+        <p class="lead text-center">
+          Thank you for taking the interest test! Here are your results:
+        </p>
+        <div class="text-center mt-5">
+          <h2 class="mb-3">Your interest type is:</h2>
+          <h1 class="display-2 mb-4">{{ interest_type }}</h1>
+          <p>
+            If you have any questions or concerns about your results, please
+            contact us.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

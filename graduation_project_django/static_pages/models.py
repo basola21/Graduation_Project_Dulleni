@@ -36,8 +36,12 @@ class students(models.Model):
 
 
     #relationships
-    student_intrest = models.ForeignKey(intrests, on_delete=models.SET_NULL, null = True)
+    student_intrest = models.CharField(max_length=50, blank=True)
+
     student_skill = models.ManyToManyField(skills)
+
+    #student answers
+    student_answer = models.ManyToManyField('Question',through='Answer')
 
     def __str__(self):
         return self.user.username
@@ -51,7 +55,6 @@ class students(models.Model):
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
             img.thumbnail(output_size) # Resize image
-            #img = img.resize((300, 300))
             img.save(self.student_image.path) # Save it again and override the larger image
 
 
@@ -64,3 +67,29 @@ class occupations(models.Model):
 
     def __str__(self):
         return self.occupation_name
+    
+
+class Question(models.Model):
+    question = models.TextField(max_length=200,blank=True)
+    questionType = models.CharField(max_length=50,blank=True)
+    answered_by = models.ManyToManyField('students', through='Answer')
+
+    def __str__(self):
+        return self.question
+    
+class Answer(models.Model):
+    answer_choices = [
+        (0, 'Strongly Dislike'),
+        (1, 'Dislike'),
+        (2, 'Unsure'),
+        (3, 'Like'),
+        (4, 'Strongly Like'),
+    ]
+    
+    user = models.ForeignKey(students, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer = models.IntegerField(choices=answer_choices )
+
+
+
+    

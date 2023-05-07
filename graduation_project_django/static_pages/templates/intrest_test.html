@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div id='main' class="content-section">
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto my-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post">
+                            <h3>Interest Test</h3>
+                            <h5 class="mb-4" style="font-weight:bold; font-size:1.5rem; text-align:center">{{question}}</h5>
+
+                            {% csrf_token %}
+                            {{ form|crispy }}
+
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock content%}
