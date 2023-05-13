@@ -30,5 +30,5 @@ for filename in os.listdir(text_file_dir):
     # Create a Question object for each line and save it to the database
     for line in lines:
         question = line.strip()
-        q = Question(question=question, questionType=question_type)
+        q = Question(question=question, question_type=question_type)
         q.save()

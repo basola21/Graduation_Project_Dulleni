@@ -19,12 +19,12 @@
   <div class="album py-5 bg-light">
     <div class="container">
       <div class="row">
-        {% for job in page_obj.object_list %}
+        {% for occupation in occupations %}
         <div class="col-md-4">
           <div class="card mb-4 box-shadow">
             
             <div class="card-body">
-              <p class="card-text">{{ job.occupation_name }}</p>
+              <p class="card-text">{{ occupation.occupation_name }} - {{ occupation.occupation_interest }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a href="" class="btn btn-sm btn-outline-secondary">
@@ -39,29 +39,6 @@
         {% endfor %}
       </div>
     
-
-
-  {% if page_obj.has_other_pages %}
-  <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current-page">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-  </div>
-  {% endif %}
-	</div>
-  </div>
 
 </div>
 {% endblock content %}

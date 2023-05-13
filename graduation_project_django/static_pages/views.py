@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm ,AnswersForm
-from .models import Question, Answer
+from .models import Question, Answer,Occupation
 from django.contrib.auth import login, authenticate , logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
@@ -8,8 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 
-# there is a better way of doing this using class based views 
-# which is more efficient and easier to read but we will stick with this for now 
+
 def register_request(request):
 	if request.method == "POST":
 		form = NewUserForm(request.POST)
@@ -75,7 +74,11 @@ def faqs(request):
     return render(request , "faqs.html")
 
 def jobs(request):
-    return render(request , "jobs.html")
+    jobs = Occupation.objects.all()
+    paginator = Paginator(jobs, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request , "jobs.html",{'page_obj': page_obj})
 
 def profile1(request):
     return render(request , "profile1.html")
@@ -87,7 +90,7 @@ def profile(request):
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,
                                    request.FILES,
-                                   instance=request.user.students)
+                                   instance=request.user.student)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
@@ -96,7 +99,7 @@ def profile(request):
 
     else:
         u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.students)
+        p_form = ProfileUpdateForm(instance=request.user.student)
 
     context = {
         'u_form': u_form,
@@ -126,7 +129,7 @@ def intrest_test(request, page = 1):
 
             # Get the current user
             user = request.user
-            student = user.students
+            student = user.student
 
             # Get the Question object corresponding to the selected question ID
             question = Question.objects.get(pk=page.object_list[0].id)
@@ -171,7 +174,7 @@ def result(request):
 
     # Calculate scores for each interest type
     for interest_type in interest_types:
-        questions = Question.objects.filter(questionType=interest_type)
+        questions = Question.objects.filter(question_type=interest_type)
         if not questions:
             print(f"No questions found for interest type: {interest_type}")
             continue
@@ -186,13 +189,61 @@ def result(request):
             score += answer.answer
 
         scoredict[interest_type] = score
+        print(f"Score for interest type {interest_type}: {score}")
 
     # Determine interest type with highest score
     max_score = max(scoredict.values())
     interest_type = [key for key, value in scoredict.items() if value == max_score][0]
 
-    student = request.user.students
-    student.student_intrest = interest_type
+    student = request.user.student
+    student.student_interest = interest_type
     student.save()
 
     return render(request, 'result.html', {'interest_type': interest_type})
+
+@login_required
+def career(request):
+    student = request.user.Student
+    interest_type = student.student_intrest
+    occupations = Occupation.objects.filter(occupation_type=interest_type)
+    return render(request, 'career.html', {'occupations': occupations})
+
+@login_required
+def skill_match(request):
+    student = request.user.student
+    student_skills = student.student_skill.all()
+    
+    # Calculate the matching percentage for each occupation
+    occupation_matches = []
+    for occupation in Occupation.objects.all():
+        matching_skills = set(occupation.occupation_skill.all()) & set(student_skills)
+        match_percent = round(len(matching_skills) / len(occupation.occupation_skill.all()) * 100)
+
+        if match_percent > 0:
+            occupation_matches.append((occupation, match_percent))
+
+    # Sort the occupations by matching percentage in descending order
+    occupation_matches.sort(key=lambda x: x[1], reverse=True)
+
+    return render(request, 'skill_match.html', {'occupation_matches': occupation_matches})
+
+@login_required
+def interst_match(request):
+
+    student = request.user.student
+
+    try :
+       student_interest = student.student_interest
+    except student.student_interest.DoesNotExist:
+        messages.error(request, 'Please take the interest test first')
+        return redirect('intrest_test')
+    else :
+        student_interest = student.student_interest.capitalize()
+        print(student_interest)
+        print('Investigative')
+
+        occupation_matches = Occupation.objects.filter(occupation_interest=student_interest) 
+        print(occupation_matches)
+
+        return render(request, 'interest_match.html', {'occupations': occupation_matches})
+        

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import students , Answer
+from .models import Student , Answer
 
 
 class NewUserForm(UserCreationForm):
@@ -22,8 +22,8 @@ class UserUpdateForm(forms.ModelForm):
 # Create a ProfileUpdateForm to update image.
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
-        model = students
-        fields = ['student_image', 'student_college', 'studnet_location', 'birth_date', 'student_skill']
+        model = Student
+        fields = ['student_image', 'student_college', 'student_location', 'birth_date', 'student_skill']
 
 class AnswersForm(forms.ModelForm):
     class Meta:

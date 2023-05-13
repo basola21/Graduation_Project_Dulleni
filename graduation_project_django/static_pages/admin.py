@@ -1,12 +1,11 @@
 from django.contrib import admin
-from .models import skills, courses, intrests, students, occupations,Answer,Question
+from .models import Skill, Course, Student, Occupation,Answer,Question
 
 # Register your models here.
-admin.site.register(skills)
-admin.site.register(courses)
-admin.site.register(intrests)
-admin.site.register(students)
-admin.site.register(occupations)
+admin.site.register(Skill)
+admin.site.register(Course)
+admin.site.register(Student)
+admin.site.register(Occupation)
 admin.site.register(Answer)
 admin.site.register(Question)
 

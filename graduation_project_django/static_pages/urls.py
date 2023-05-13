@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home ,about, blog, contact, faqs, jobs, login_request, result,logout_request,profile,register,intrest_test
+from .views import home ,about, blog, contact, faqs, jobs, login_request, result,logout_request,profile,register,intrest_test, jobs,skill_match,interst_match
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -17,6 +17,8 @@ urlpatterns = [
     path("intrest-test",intrest_test, name = "intrest_test"),
     path("intrest-test/<page>",intrest_test, name = "intrest_test"),
     path("result",result, name = "result"),
+    path("jobs/skill-match",skill_match, name = "skill_match"),
+    path("jobs/interst-match",interst_match, name = "interst_match"),
 
     
 ]
