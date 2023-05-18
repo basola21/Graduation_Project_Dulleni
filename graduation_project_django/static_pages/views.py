@@ -233,15 +233,12 @@ def interst_match(request):
     student = request.user.student
 
     try :
-       student_interest = student.student_interest
+        student_interest = student.student_interest
     except student.student_interest.DoesNotExist:
         messages.error(request, 'Please take the interest test first')
         return redirect('intrest_test')
     else :
         student_interest = student.student_interest.capitalize()
-        print(student_interest)
-        print('Investigative')
-
         occupation_matches = Occupation.objects.filter(occupation_interest=student_interest) 
         print(occupation_matches)
 
