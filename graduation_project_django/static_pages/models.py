@@ -14,14 +14,18 @@ class Skill(models.Model):
 
 
 class Course(models.Model):
-    course_name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
-    skill_id = models.ManyToManyField(Skill)
+    course_name = models.CharField(max_length=255)
+    university = models.CharField(max_length=255)
+    difficulty_level = models.CharField(max_length=50)
+    course_rating = models.DecimalField(max_digits=3, decimal_places=1)
+    course_url = models.URLField()
+    course_description = models.TextField()
+    skills = models.ManyToManyField(Skill)
+    extracted_skills = models.TextField()
 
     def __str__(self):
         return self.course_name
-
-
+    
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     student_location = models.CharField(max_length=30, blank=True)

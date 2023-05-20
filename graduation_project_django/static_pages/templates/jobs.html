@@ -27,7 +27,7 @@
               <p class="card-text">{{ job.occupation_name }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="" class="btn btn-sm btn-outline-secondary">
+                  <a href="{% url 'job_details' job.id %}" class="btn btn-sm btn-outline-secondary">
                     View
                   </a>
                 </div>

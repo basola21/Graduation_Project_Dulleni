@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div id="main" class="sidebar-none sidebar-divider-off">
+    <div class="container">
+      <h1>{{ job.occupation_name }}</h1>
+      <p>{{ job.occupation_description }}</p>
+
+      <h2>Job Skills</h2>
+      <ul>
+        {% for skill in job.occupation_skill.all %}
+          <li>{{ skill.skill_name }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2>Related Courses</h2>
+      <div class="row">
+        {% for course in related_courses %}
+          {% if forloop.counter <= 9 %}  <!-- Show only the top 10 courses -->
+          <div class="col-md-4">
+            <div class="card mb-4 box-shadow">
+              <div class="card-body">
+                <h5 class="card-title">{{ course.course_name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ course.university }}</h6>
+                <p class="card-text" style="max-height: 150px; overflow: hidden;">{{ course.course_description }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="{{ course.course_url }}" class="btn btn-sm btn-outline-secondary">
+                      View Course
+                    </a>
+                  </div>
+                  <small class="text-muted">Difficulty Level: {{ course.difficulty_level }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

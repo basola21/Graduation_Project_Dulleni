@@ -1,24 +1,25 @@
 from django.urls import path
-from .views import home ,about, blog, contact, faqs, jobs, login_request, result,logout_request,profile,register,intrest_test, jobs,skill_match,interst_match
+from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('about/', about, name='about'),
-    path('blog/', blog, name='blog'),
-    path('contact/', contact, name='contact'),
-    path('faqs/', faqs, name='faqs'),
-    path('jobs/', jobs, name='jobs'),
-    path('login', login_request, name='login'),
-    path('register/', register, name='register'),
-    path("logout", logout_request, name= "logout"),
-    path("profile/", profile, name= "profile"),
-    path("intrest-test/",intrest_test, name = "intrest_test"),
-    path("intrest-test/<page>/",intrest_test, name = "intrest_test"),
-    path("result/",result, name = "result"),
-    path("jobs/skill-match/",skill_match, name = "skill_match"),
-    path("jobs/interst-match/",interst_match, name = "interst_match"),
+    path('', views.home, name='home'),
+    path('about/', views.about, name='about'),
+    path('blog/', views.blog, name='blog'),
+    path('contact/', views.contact, name='contact'),
+    path('faqs/', views.faqs, name='faqs'),
+    path('jobs/', views.jobs, name='jobs'),
+    path('jobs/<int:job_id>/', views.job_details, name='job_details'),
+    path('login', views.login_request, name='login'),
+    path('register/', views.register, name='register'),
+    path("logout", views.logout_request, name= "logout"),
+    path("profile/", views.profile, name= "profile"),
+    path("intrest-test/", views.intrest_test, name = "intrest_test"),
+    path("intrest-test/<page>/", views.intrest_test, name = "intrest_test"),
+    path("result/", views.result, name = "result"),
+    path("jobs/skill-match/", views.skill_match, name = "skill_match"),
+    path("jobs/interst-match/", views.interst_match, name = "interst_match"),
 
     
 ]

@@ -1,12 +1,15 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from .forms import NewUserForm, UserUpdateForm, ProfileUpdateForm ,AnswersForm
-from .models import Question, Answer,Occupation
+from .models import Question, Answer,Occupation,Course
 from django.contrib.auth import login, authenticate , logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-
+from django.db.models import Q
+from fuzzywuzzy import fuzz
+from itertools import combinations
+from functools import reduce
 
 
 def register_request(request):
@@ -73,6 +76,9 @@ def contact(request):
 def faqs(request):
     return render(request , "faqs.html")
 
+def profile1(request):
+    return render(request , "profile1.html")
+
 def jobs(request):
     jobs = Occupation.objects.all()
     paginator = Paginator(jobs, 9)
@@ -80,10 +86,59 @@ def jobs(request):
     page_obj = paginator.get_page(page_number)
     return render(request , "jobs.html",{'page_obj': page_obj})
 
-def profile1(request):
-    return render(request , "profile1.html")
 
-# Update it here
+def job_details(request, job_id):
+    job = get_object_or_404(Occupation, id=job_id)
+
+    # Get the skills and title associated with the job
+    job_skills = job.occupation_skill.values_list('skill_name', flat=True)
+    job_title = job.occupation_name
+
+    # Filter courses based on skills matching
+    courses_by_skills = Course.objects.filter(skills__in=job_skills).distinct()
+
+    # Filter courses based on title similarity
+    courses_by_title = Course.objects.filter(
+        reduce(
+            lambda x, y: x | y,
+            (Q(course_name__icontains=word) for word in job_title.split())
+        )
+    )
+
+    # Calculate relevance scores for skills-based matching
+    courses_by_skills_relevance = {}
+    for course in courses_by_skills:
+        matching_skills = course.skills.filter(skill_name__in=job_skills)
+        relevance_score = len(matching_skills)
+        courses_by_skills_relevance[course] = relevance_score
+
+    # Calculate relevance scores for title-based matching
+    courses_by_title_relevance = {}
+    for course in courses_by_title:
+        title_similarity = fuzz.token_set_ratio(job_title, course.course_name)
+        courses_by_title_relevance[course] = title_similarity
+
+    # Combine relevance scores from skills and title matching
+    combined_relevance = {}
+    for course in courses_by_skills_relevance.keys() | courses_by_title_relevance.keys():
+        skills_score = courses_by_skills_relevance.get(course, 0)
+        title_score = courses_by_title_relevance.get(course, 0)
+        combined_score = skills_score + title_score
+        combined_relevance[course] = combined_score
+
+    # Sort the courses based on combined relevance scores
+    sorted_courses = sorted(combined_relevance, key=combined_relevance.get, reverse=True)
+
+    
+
+    context = {
+        'job': job,
+        'related_courses': sorted_courses,
+    }
+
+    return render(request, 'job_details.html', context)
+
+
 @login_required
 def profile(request):
     if request.method == 'POST':
@@ -212,29 +267,31 @@ def career(request):
 def skill_match(request):
     student = request.user.student
     student_skills = student.student_skill.all()
-    
-    # Calculate the matching percentage for each occupation
-    occupation_matches = []
-    for occupation in Occupation.objects.all():
-        matching_skills = set(occupation.occupation_skill.all()) & set(student_skills)
-        match_percent = round(len(matching_skills) / len(occupation.occupation_skill.all()) * 100)
 
-        if match_percent > 0:
-            occupation_matches.append((occupation, match_percent))
+    if not student_skills:
+        messages.error(request, 'Please add skills to your profile first')
+        return redirect('profile')
+    else:
+        # Calculate the matching percentage for each occupation
+        occupation_matches = []
+        for occupation in Occupation.objects.all():
+            matching_skills = set(occupation.occupation_skill.all()) & set(student_skills)
+            match_percent = round(len(matching_skills) / len(occupation.occupation_skill.all()) * 100)
 
-    # Sort the occupations by matching percentage in descending order
-    occupation_matches.sort(key=lambda x: x[1], reverse=True)
+            if match_percent > 0:
+                occupation_matches.append((occupation, match_percent))
 
-    return render(request, 'skill_match.html', {'occupation_matches': occupation_matches})
+        # Sort the occupations by matching percentage in descending order
+        occupation_matches.sort(key=lambda x: x[1], reverse=True)
+
+        return render(request, 'skill_match.html', {'occupation_matches': occupation_matches})
 
 @login_required
 def interst_match(request):
 
     student = request.user.student
 
-    try :
-        student_interest = student.student_interest
-    except student.student_interest.DoesNotExist:
+    if student.student_interest == "":
         messages.error(request, 'Please take the interest test first')
         return redirect('intrest_test')
     else :
